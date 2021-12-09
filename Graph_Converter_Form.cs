@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Graph_Converter.Classes;
 
 namespace Graph_Converter
 {
@@ -29,6 +30,15 @@ namespace Graph_Converter
                 graphicsPaint.DrawLine(black, new Point(startPoint.X, startPoint.Y), new Point(DrawBox.Width, startPoint.Y));
                 isCoordSystemDrawing = true;
             }
+            
+            if(startPoint.X <= DrawBox.Width)
+            {
+                Functions func = new Functions();
+                // Получаем точки графика функции
+                Point[] funcPoints = func.SinusoidFunction(DrawBox.Width);
+                graphicsPaint.DrawLines(new Pen(Color.Red), funcPoints);
+                graphicsPaint.DrawLine(new Pen(Color.Red), new Point(startPoint.X, startPoint.Y), funcPoints[0]);
+            }    
         }
 
         private void SamplingButton_Click(object sender, EventArgs e)
