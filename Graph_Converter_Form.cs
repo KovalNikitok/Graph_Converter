@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Graph_Converter
@@ -10,13 +11,24 @@ namespace Graph_Converter
             InitializeComponent();
         }
 
+        private Point startPoint = new Point(20, 40);
         private float samplingLevel;
         private int quantingLevel;
         private bool isCoordSystemDrawing;
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
-            
+            Graphics graphicsPaint = DrawBox.CreateGraphics();
+            graphicsPaint.Clear(Color.White);
+            Pen black = new Pen(Color.Black);
+            startPoint.Y = DrawBox.Height - 40;
+            // Рисуем оси координат
+            if (!isCoordSystemDrawing)
+            {
+                graphicsPaint.DrawLine(black, new Point(startPoint.X, 0), new Point(startPoint.X, startPoint.Y));
+                graphicsPaint.DrawLine(black, new Point(startPoint.X, startPoint.Y), new Point(DrawBox.Width, startPoint.Y));
+                isCoordSystemDrawing = true;
+            }
         }
 
         private void SamplingButton_Click(object sender, EventArgs e)
