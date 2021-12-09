@@ -1,4 +1,4 @@
-﻿namespace Test_for_HW
+﻿namespace Graph_Converter
 {
     partial class Graph_Converter_Form
     {

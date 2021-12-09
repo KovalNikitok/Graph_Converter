@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Test_for_HW.Properties
+namespace Graph_Converter.Properties
 {
 
 
