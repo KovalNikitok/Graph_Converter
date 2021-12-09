@@ -3,9 +3,17 @@ using System.Drawing;
 
 namespace Graph_Converter.Classes
 {
-    class Functions
+    interface IFunctionGraphPoints
     {
-        public Point[] SinusoidFunction(int boxWidth)
+        Point[] GetGraphPoints(int boxWidth);
+    }
+    abstract class Functions : IFunctionGraphPoints
+    {
+        abstract public Point[] GetGraphPoints(int boxWidth);
+    }
+    class Sinusoid : Functions
+    {
+        public override Point[] GetGraphPoints(int boxWidth)
         {
             Point[] functionPoints = new Point[boxWidth];
             for (int i = 0; i < functionPoints.Length; ++i)
@@ -15,5 +23,4 @@ namespace Graph_Converter.Classes
             return functionPoints;
         }
     }
-
 }

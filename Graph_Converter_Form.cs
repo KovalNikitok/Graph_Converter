@@ -34,9 +34,9 @@ namespace Graph_Converter
             
             if(startPoint.X <= DrawBox.Width)
             {
-                Functions func = new Functions();
+                Functions func = new Sinusoid();
                 // Получаем точки графика функции
-                Point[] funcPoints = func.SinusoidFunction(DrawBox.Width);
+                Point[] funcPoints = func.GetGraphPoints(DrawBox.Width);
                 // Создаём массив для получения уровней квантования
                 List<int> functionQuanting = new List<int>(quantingLevel);
                 // Рисуем уровни квантования
