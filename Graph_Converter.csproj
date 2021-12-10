@@ -7,7 +7,7 @@
     <ProjectGuid>{8A335F96-BDCB-4579-9624-E91EB0EAA167}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Test_for_HW</RootNamespace>
-    <AssemblyName>Test_for_HW</AssemblyName>
+    <AssemblyName>Graph_Converter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

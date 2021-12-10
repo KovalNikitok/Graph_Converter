@@ -14,9 +14,9 @@ namespace Graph_Converter
         }
 
         private Point startPoint = new Point(20, 40);
-        private float samplingLevel;
-        private int quantingLevel;
-        private bool isCoordSystemDrawing;
+        private float samplingLevel = 0.2f;
+        private int quantingLevel = 4;
+        private Functions func = new Sinusoid();
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
@@ -25,16 +25,12 @@ namespace Graph_Converter
             Pen black = new Pen(Color.Black);
             startPoint.Y = DrawBox.Height - 40;
             // Рисуем оси координат
-            if (!isCoordSystemDrawing)
+            graphicsPaint.DrawLine(black, new Point(startPoint.X, 0), new Point(startPoint.X, startPoint.Y));
+            graphicsPaint.DrawLine(black, new Point(startPoint.X, startPoint.Y), new Point(DrawBox.Width, startPoint.Y));
+
+            if (startPoint.X <= DrawBox.Width)
             {
-                graphicsPaint.DrawLine(black, new Point(startPoint.X, 0), new Point(startPoint.X, startPoint.Y));
-                graphicsPaint.DrawLine(black, new Point(startPoint.X, startPoint.Y), new Point(DrawBox.Width, startPoint.Y));
-                isCoordSystemDrawing = true;
-            }
-            
-            if(startPoint.X <= DrawBox.Width)
-            {
-                Functions func = new Sinusoid();
+                //Functions func = new Sinusoid();
                 // Получаем точки графика функции
                 Point[] funcPoints = func.GetGraphPoints(DrawBox.Width);
                 // Создаём массив для получения уровней квантования
@@ -53,11 +49,11 @@ namespace Graph_Converter
                 // Получаем разбивку по уровням дискретизации
                 int[] samplingDecompose = new int[(int)Math.Ceiling(quantingLevel / samplingLevel)];
                 int samplingStage = (int)((DrawBox.Width - startPoint.X) * (samplingLevel > 0.0f && samplingLevel < 1.0f ? samplingLevel : 0.1f)) - 1;
-                for (int i = samplingStage, n = 0; i < DrawBox.Width; i += samplingStage, n++)
+                try
                 {
-                    // Уровень квантования для данной точки графика находится в рамках от firstIndex = IndexOf(elem) до secondIndex = firstIndex + 1
-                    try
+                    for (int i = samplingStage, n = 0; i < DrawBox.Width; i += samplingStage, n++)
                     {
+                        // Уровень квантования для данной точки графика находится в рамках от firstIndex = IndexOf(elem) до secondIndex = firstIndex + 1
                         samplingDecompose[n] = functionQuanting.IndexOf(functionQuanting.Find(elem => elem <= funcPoints[i].Y));
                         //funcPoints.ElementAt(i).Y возможна на замену ^
                         graphicsPaint.DrawLine(new Pen(Color.BlueViolet, 2.0f),
@@ -65,24 +61,24 @@ namespace Graph_Converter
                                 new Point(i + 32, functionQuanting[samplingDecompose[n]])
                             );
                     }
-                    catch
-                    {
-                        MessageBox.Show(
-                            this,
-                            "Возникла ошибка при попытке раазбития по уровням дискретизации",
-                            "Уведомление",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error
-                        );
-                    }
 
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        this,
+                        "Возникла ошибка при попытке раазбития по уровням дискретизации",
+                        "Уведомление",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
                 }
                 //int functionStages = (int)Math.Floor(boxWidth / (samplingLevel * 4f)); // из частоты дискретизации
 
                 // Рисуем график
                 graphicsPaint.DrawLines(new Pen(Color.Red), funcPoints);
                 graphicsPaint.DrawLine(new Pen(Color.Red), new Point(startPoint.X, startPoint.Y), funcPoints[0]);
-            }    
+            }
         }
 
         private void SamplingButton_Click(object sender, EventArgs e)
@@ -91,14 +87,13 @@ namespace Graph_Converter
                     SamplingTextBox.Text.Replace('.', ','),
                     out this.samplingLevel)
                 )
-                    MessageBox.Show(
-                            this,
-                            "Неправильный формат уровней дискретизации",
-                            "Уведомление",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information
-                        );
-            else isCoordSystemDrawing = false;
+                MessageBox.Show(
+                        this,
+                        "Неправильный формат уровней дискретизации",
+                        "Уведомление",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
         }
 
         private void QuantingLevelButton_Click(object sender, EventArgs e)
@@ -107,14 +102,39 @@ namespace Graph_Converter
                         QuantingLevelTextBox.Text,
                         out this.quantingLevel)
                 )
-                    MessageBox.Show(
-                             this,
-                             "Неправильный формат уровней квантования",
-                             "Уведомление",
-                             MessageBoxButtons.OK,
-                             MessageBoxIcon.Information
-                         );
-            else isCoordSystemDrawing = false;
+                MessageBox.Show(
+                         this,
+                         "Неправильный формат уровней квантования",
+                         "Уведомление",
+                         MessageBoxButtons.OK,
+                         MessageBoxIcon.Information
+                     );
+        }
+
+        private void radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton functionRadioButton = (RadioButton)sender;
+            if (functionRadioButton.Checked)
+            {
+                switch (functionRadioButton.Text)
+                {
+                    case "Синусоида":
+                    {
+                            func = new Sinusoid();
+                            break;
+                    }
+                    case "Косинусоида":
+                    {
+                            func = new Cosinusoid();
+                            break;
+                    }
+                    case "Коренная":
+                    {
+                            func = new SquareRoot();
+                            break;
+                    }
+                }
+            }
         }
     }
 }

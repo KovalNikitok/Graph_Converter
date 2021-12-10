@@ -23,4 +23,28 @@ namespace Graph_Converter.Classes
             return functionPoints;
         }
     }
+    class Cosinusoid : Functions
+    {
+        public override Point[] GetGraphPoints(int boxWidth)
+        {
+            Point[] functionPoints = new Point[boxWidth];
+            for (int i = 0; i < functionPoints.Length; ++i)
+            {
+                functionPoints[i] = new Point(i + 32, (int)(Math.Cos((double)i / 10) * 100 + 120));
+            }
+            return functionPoints;
+        }
+    }
+    class SquareRoot : Functions
+    {
+        public override Point[] GetGraphPoints(int boxWidth)
+        {
+            Point[] functionPoints = new Point[boxWidth];
+            for (int i = 0; i < functionPoints.Length; ++i)
+            {
+                functionPoints[i] = new Point(i + 32, (int)(Math.Sqrt((double)i * 10)) + 120);
+            }
+            return functionPoints;
+        }
+    }
 }
