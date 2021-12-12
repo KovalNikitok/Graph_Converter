@@ -15,7 +15,7 @@ namespace Graph_Converter
 
         private Point startPoint = new Point(20, 40);
         private float samplingLevel = 0.2f;
-        private int quantingLevel = 4;
+        private int quantizationLevels = 4;
         private Functions func = new Sinusoid();
 
         private void ShowButton_Click(object sender, EventArgs e)
@@ -30,35 +30,31 @@ namespace Graph_Converter
 
             if (startPoint.X <= DrawBox.Width)
             {
-                //Functions func = new Sinusoid();
+                if (quantizationLevels <= 1)
+                    quantizationLevels = 2;
+                if (samplingLevel < 0.01f || samplingLevel > 0.99f)
+                    samplingLevel = 0.1f;
                 // Получаем точки графика функции
                 Point[] funcPoints = func.GetGraphPoints(DrawBox.Width);
-                // Создаём массив для получения уровней квантования
-                List<int> functionQuanting = new List<int>(quantingLevel);
                 // Рисуем уровни квантования
-                int quantingStage = (startPoint.Y / quantingLevel) - 1;
-                if (quantingLevel > 0)
-                {
-                    int currentQuantingStage = startPoint.Y - quantingStage;
-                    for (int i = currentQuantingStage; i > 1; i -= quantingStage)
-                    {
-                        functionQuanting.Add(i);
-                        graphicsPaint.DrawLine(black, new Point(startPoint.X, i), new Point(DrawBox.Width, i));
-                    }
-                }
+                Quantization funcQuantization = new Quantization(startPoint, quantizationLevels);
+
+                List<int> quantizationOfFunction = funcQuantization.GetQuantizationOfFunction();
+                funcQuantization.DrawQuantizationLevels(graphicsPaint, DrawBox.Width);
+
                 // Получаем разбивку по уровням дискретизации
-                int[] samplingDecompose = new int[(int)Math.Ceiling(quantingLevel / samplingLevel)];
-                int samplingStage = (int)((DrawBox.Width - startPoint.X) * (samplingLevel > 0.0f && samplingLevel < 1.0f ? samplingLevel : 0.1f)) - 1;
+                int levels = Convert.ToInt32(Math.Ceiling(quantizationLevels / samplingLevel));
+                int[] samplingDecompose = new int[levels];
+                int samplingStage = (int)((DrawBox.Width - startPoint.X) * samplingLevel);
                 try
                 {
                     for (int i = samplingStage, n = 0; i < DrawBox.Width; i += samplingStage, n++)
                     {
                         // Уровень квантования для данной точки графика находится в рамках от firstIndex = IndexOf(elem) до secondIndex = firstIndex + 1
-                        samplingDecompose[n] = functionQuanting.IndexOf(functionQuanting.Find(elem => elem <= funcPoints[i].Y));
-                        //funcPoints.ElementAt(i).Y возможна на замену ^
+                        samplingDecompose[n] = quantizationOfFunction.IndexOf(quantizationOfFunction.Find(elem => elem <= funcPoints[i].Y));
                         graphicsPaint.DrawLine(new Pen(Color.BlueViolet, 2.0f),
-                                new Point(i + 32, functionQuanting[samplingDecompose[n]] + quantingStage),
-                                new Point(i + 32, functionQuanting[samplingDecompose[n]])
+                                new Point(i + 32, quantizationOfFunction[samplingDecompose[n]] + funcQuantization.QuantizationThresold),
+                                new Point(i + 32, quantizationOfFunction[samplingDecompose[n]])
                             );
                     }
 
@@ -100,7 +96,7 @@ namespace Graph_Converter
         {
             if (!int.TryParse(
                         QuantingLevelTextBox.Text,
-                        out this.quantingLevel)
+                        out this.quantizationLevels)
                 )
                 MessageBox.Show(
                          this,
