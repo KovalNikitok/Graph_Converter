@@ -22,7 +22,8 @@ namespace Graph_Converter
         {
             Graphics graphicsPaint = DrawBox.CreateGraphics();
             graphicsPaint.Clear(Color.White);
-            Pen black = new Pen(Color.Black);
+            Pen black = new Pen(Color.Black),
+                functionPen = new Pen(Color.BlueViolet, 2f);
             startPoint.Y = DrawBox.Height - 40;
             // Рисуем оси координат
             graphicsPaint.DrawLine(black, new Point(startPoint.X, 0), new Point(startPoint.X, startPoint.Y));
@@ -38,16 +39,17 @@ namespace Graph_Converter
                 Point[] funcPoints = func.GetGraphPoints(DrawBox.Width);
                 // Рисуем уровни квантования
                 Quantization funcQuantization = new Quantization(startPoint, quantizationLevels);
-
                 List<int> quantizationOfFunction = funcQuantization.GetQuantizationOfFunction();
                 funcQuantization.DrawQuantizationLevels(graphicsPaint, DrawBox.Width);
 
                 // Получаем разбивку по уровням дискретизации
-                int levels = Convert.ToInt32(Math.Ceiling(quantizationLevels / samplingLevel));
+                /*int levels = Convert.ToInt32(Math.Ceiling(quantizationLevels / samplingLevel));
                 int[] samplingDecompose = new int[levels];
-                int samplingStage = (int)((DrawBox.Width - startPoint.X) * samplingLevel);
+                int samplingStage = (int)((DrawBox.Width - startPoint.X) * samplingLevel);*/
+                Sampling funcSampling = new Sampling(DrawBox.Width, samplingLevel, quantizationLevels);
                 try
                 {
+                    /*
                     for (int i = samplingStage, n = 0; i < DrawBox.Width; i += samplingStage, n++)
                     {
                         // Уровень квантования для данной точки графика находится в рамках от firstIndex = IndexOf(elem) до secondIndex = firstIndex + 1
@@ -56,14 +58,32 @@ namespace Graph_Converter
                                 new Point(i + 32, quantizationOfFunction[samplingDecompose[n]] + funcQuantization.QuantizationThresold),
                                 new Point(i + 32, quantizationOfFunction[samplingDecompose[n]])
                             );
-                    }
-
+                    }*/
+                    int[] samplingDecompose = funcSampling.SamplingDecompose(startPoint, funcPoints, quantizationOfFunction);
+                    //funcSampling.DrawSampling(graphicsPaint, samplingDecompose, quantizationOfFunction, funcQuantization.QuantizationThresold);
                 }
                 catch
                 {
                     MessageBox.Show(
                         this,
-                        "Возникла ошибка при попытке раазбития по уровням дискретизации",
+                        "Возникла ошибка при попытке разбития по уровням дискретизации",
+                        "Уведомление",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                }
+                
+                try
+                {
+                    QuantizationByLevels closestFromBelow = 
+                        new QuantizationByClosestFromBelowLevel(funcPoints, funcQuantization, funcSampling);
+                    closestFromBelow.DrawQuantizationOfFunction(graphicsPaint);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        this,
+                        "Возникла ошибка при попытке отрисовки делений по уровням квантования",
                         "Уведомление",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
@@ -72,8 +92,8 @@ namespace Graph_Converter
                 //int functionStages = (int)Math.Floor(boxWidth / (samplingLevel * 4f)); // из частоты дискретизации
 
                 // Рисуем график
-                graphicsPaint.DrawLines(new Pen(Color.Red), funcPoints);
-                graphicsPaint.DrawLine(new Pen(Color.Red), new Point(startPoint.X, startPoint.Y), funcPoints[0]);
+                graphicsPaint.DrawLines(functionPen, funcPoints);
+                //graphicsPaint.DrawLine(new Pen(Color.Red), new Point(startPoint.X, startPoint.Y), funcPoints[0]);
             }
         }
 

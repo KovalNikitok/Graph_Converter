@@ -10,7 +10,7 @@ namespace Graph_Converter.Classes
         List<int> GetQuantizationOfFunction();
         void DrawQuantizationLevels(Graphics g, int width);
     }
-    class Quantization : IQuantization
+    sealed class Quantization : IQuantization
     {
         private readonly int height;
         private readonly int startX;
@@ -25,7 +25,7 @@ namespace Graph_Converter.Classes
 
         public int QuantizationThresold
         {
-            get => Convert.ToInt32(Math.Ceiling((double)(height / quantizationLevels))) - 1;
+            get => Convert.ToInt32(Math.Ceiling((double)(height / quantizationLevels)));
         }
 
         public List<int> GetQuantizationOfFunction()

@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Classes\Functions.cs" />
     <Compile Include="Classes\Quantization.cs" />
+    <Compile Include="Classes\QuantizationByLevels.cs" />
     <Compile Include="Classes\Sampling.cs" />
     <Compile Include="Graph_Converter_Form.cs">
       <SubType>Form</SubType>

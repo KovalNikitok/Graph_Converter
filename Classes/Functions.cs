@@ -18,7 +18,8 @@ namespace Graph_Converter.Classes
             Point[] functionPoints = new Point[boxWidth];
             for (int i = 0; i < functionPoints.Length; ++i)
             {
-                functionPoints[i] = new Point(i + 32, (int)(Math.Sin((double)i / 10) * 100 + 120));
+                int y = (int)(Math.Sin((double)i / 10) * 100) + 120;
+                functionPoints[i] = new Point(i + 32, y > 240 ? 240 : y);
             }
             return functionPoints;
         }
@@ -30,7 +31,8 @@ namespace Graph_Converter.Classes
             Point[] functionPoints = new Point[boxWidth];
             for (int i = 0; i < functionPoints.Length; ++i)
             {
-                functionPoints[i] = new Point(i + 32, (int)(Math.Cos((double)i / 10) * 100 + 120));
+                int y = (int)(Math.Cos((double)i / 10) * 100) + 120;
+                functionPoints[i] = new Point(i + 32, y > 240 ? 240 : y);
             }
             return functionPoints;
         }
@@ -42,7 +44,8 @@ namespace Graph_Converter.Classes
             Point[] functionPoints = new Point[boxWidth];
             for (int i = 0; i < functionPoints.Length; ++i)
             {
-                functionPoints[i] = new Point(i + 32, (int)(Math.Sqrt((double)i * 10)) + 120);
+                int y = (int)(Math.Sqrt((double)i * 20)) + 120;
+                functionPoints[i] = new Point(i + 32, y > 240 ? 240 : y);
             }
             return functionPoints;
         }
