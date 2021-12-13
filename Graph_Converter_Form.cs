@@ -35,6 +35,7 @@ namespace Graph_Converter
                     quantizationLevels = 2;
                 if (samplingLevel < 0.01f || samplingLevel > 0.99f)
                     samplingLevel = 0.1f;
+
                 // Получаем точки графика функции
                 Point[] funcPoints = func.GetGraphPoints(DrawBox.Width);
                 // Рисуем уровни квантования
@@ -43,24 +44,10 @@ namespace Graph_Converter
                 funcQuantization.DrawQuantizationLevels(graphicsPaint, DrawBox.Width);
 
                 // Получаем разбивку по уровням дискретизации
-                /*int levels = Convert.ToInt32(Math.Ceiling(quantizationLevels / samplingLevel));
-                int[] samplingDecompose = new int[levels];
-                int samplingStage = (int)((DrawBox.Width - startPoint.X) * samplingLevel);*/
                 Sampling funcSampling = new Sampling(DrawBox.Width, samplingLevel, quantizationLevels);
                 try
                 {
-                    /*
-                    for (int i = samplingStage, n = 0; i < DrawBox.Width; i += samplingStage, n++)
-                    {
-                        // Уровень квантования для данной точки графика находится в рамках от firstIndex = IndexOf(elem) до secondIndex = firstIndex + 1
-                        samplingDecompose[n] = quantizationOfFunction.IndexOf(quantizationOfFunction.Find(elem => elem <= funcPoints[i].Y));
-                        graphicsPaint.DrawLine(new Pen(Color.BlueViolet, 2.0f),
-                                new Point(i + 32, quantizationOfFunction[samplingDecompose[n]] + funcQuantization.QuantizationThresold),
-                                new Point(i + 32, quantizationOfFunction[samplingDecompose[n]])
-                            );
-                    }*/
                     int[] samplingDecompose = funcSampling.SamplingDecompose(startPoint, funcPoints, quantizationOfFunction);
-                    //funcSampling.DrawSampling(graphicsPaint, samplingDecompose, quantizationOfFunction, funcQuantization.QuantizationThresold);
                 }
                 catch
                 {
@@ -89,11 +76,8 @@ namespace Graph_Converter
                         MessageBoxIcon.Error
                     );
                 }
-                //int functionStages = (int)Math.Floor(boxWidth / (samplingLevel * 4f)); // из частоты дискретизации
-
                 // Рисуем график
                 graphicsPaint.DrawLines(functionPen, funcPoints);
-                //graphicsPaint.DrawLine(new Pen(Color.Red), new Point(startPoint.X, startPoint.Y), funcPoints[0]);
             }
         }
 
