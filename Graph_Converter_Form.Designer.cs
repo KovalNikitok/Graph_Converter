@@ -31,16 +31,21 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Graph_Converter_Form));
             this.DrawBox = new System.Windows.Forms.PictureBox();
             this.ShowButton = new System.Windows.Forms.Button();
-            this.SamplingTextBox = new System.Windows.Forms.TextBox();
-            this.SamplingButton = new System.Windows.Forms.Button();
             this.QauntingLevelButton = new System.Windows.Forms.Button();
             this.QuantingLevelTextBox = new System.Windows.Forms.TextBox();
             this.panelOfRadioButtons = new System.Windows.Forms.Panel();
             this.squareRootRadioButton = new System.Windows.Forms.RadioButton();
             this.cosinusoidRadioButton = new System.Windows.Forms.RadioButton();
             this.sinusoidRadioButton = new System.Windows.Forms.RadioButton();
+            this.PanelOfQuantizationLevels = new System.Windows.Forms.Panel();
+            this.LesserQuantizationRadioButton = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.CoefficientTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.DrawBox)).BeginInit();
             this.panelOfRadioButtons.SuspendLayout();
+            this.PanelOfQuantizationLevels.SuspendLayout();
             this.SuspendLayout();
             // 
             // DrawBox
@@ -62,29 +67,9 @@
             this.ShowButton.UseVisualStyleBackColor = true;
             this.ShowButton.Click += new System.EventHandler(this.ShowButton_Click);
             // 
-            // SamplingTextBox
-            // 
-            this.SamplingTextBox.Location = new System.Drawing.Point(149, 340);
-            this.SamplingTextBox.MaxLength = 5;
-            this.SamplingTextBox.Multiline = true;
-            this.SamplingTextBox.Name = "SamplingTextBox";
-            this.SamplingTextBox.Size = new System.Drawing.Size(58, 29);
-            this.SamplingTextBox.TabIndex = 2;
-            this.SamplingTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // SamplingButton
-            // 
-            this.SamplingButton.Location = new System.Drawing.Point(213, 336);
-            this.SamplingButton.Name = "SamplingButton";
-            this.SamplingButton.Size = new System.Drawing.Size(103, 36);
-            this.SamplingButton.TabIndex = 3;
-            this.SamplingButton.Text = "Задать дискретизацию";
-            this.SamplingButton.UseVisualStyleBackColor = true;
-            this.SamplingButton.Click += new System.EventHandler(this.SamplingButton_Click);
-            // 
             // QauntingLevelButton
             // 
-            this.QauntingLevelButton.Location = new System.Drawing.Point(405, 336);
+            this.QauntingLevelButton.Location = new System.Drawing.Point(188, 336);
             this.QauntingLevelButton.Name = "QauntingLevelButton";
             this.QauntingLevelButton.Size = new System.Drawing.Size(104, 36);
             this.QauntingLevelButton.TabIndex = 4;
@@ -94,8 +79,8 @@
             // 
             // QuantingLevelTextBox
             // 
-            this.QuantingLevelTextBox.Location = new System.Drawing.Point(339, 340);
-            this.QuantingLevelTextBox.MaxLength = 2;
+            this.QuantingLevelTextBox.Location = new System.Drawing.Point(122, 339);
+            this.QuantingLevelTextBox.MaxLength = 1;
             this.QuantingLevelTextBox.Multiline = true;
             this.QuantingLevelTextBox.Name = "QuantingLevelTextBox";
             this.QuantingLevelTextBox.Size = new System.Drawing.Size(58, 29);
@@ -104,12 +89,13 @@
             // 
             // panelOfRadioButtons
             // 
+            this.panelOfRadioButtons.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelOfRadioButtons.Controls.Add(this.squareRootRadioButton);
             this.panelOfRadioButtons.Controls.Add(this.cosinusoidRadioButton);
             this.panelOfRadioButtons.Controls.Add(this.sinusoidRadioButton);
             this.panelOfRadioButtons.Location = new System.Drawing.Point(12, 12);
             this.panelOfRadioButtons.Name = "panelOfRadioButtons";
-            this.panelOfRadioButtons.Size = new System.Drawing.Size(793, 32);
+            this.panelOfRadioButtons.Size = new System.Drawing.Size(298, 32);
             this.panelOfRadioButtons.TabIndex = 6;
             // 
             // squareRootRadioButton
@@ -147,16 +133,81 @@
             this.sinusoidRadioButton.UseVisualStyleBackColor = true;
             this.sinusoidRadioButton.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
+            // PanelOfQuantizationLevels
+            // 
+            this.PanelOfQuantizationLevels.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.PanelOfQuantizationLevels.Controls.Add(this.radioButton2);
+            this.PanelOfQuantizationLevels.Controls.Add(this.radioButton1);
+            this.PanelOfQuantizationLevels.Controls.Add(this.LesserQuantizationRadioButton);
+            this.PanelOfQuantizationLevels.Location = new System.Drawing.Point(513, 12);
+            this.PanelOfQuantizationLevels.Name = "PanelOfQuantizationLevels";
+            this.PanelOfQuantizationLevels.Size = new System.Drawing.Size(292, 32);
+            this.PanelOfQuantizationLevels.TabIndex = 7;
+            // 
+            // LesserQuantizationRadioButton
+            // 
+            this.LesserQuantizationRadioButton.AutoSize = true;
+            this.LesserQuantizationRadioButton.Checked = true;
+            this.LesserQuantizationRadioButton.Location = new System.Drawing.Point(4, 6);
+            this.LesserQuantizationRadioButton.Name = "LesserQuantizationRadioButton";
+            this.LesserQuantizationRadioButton.Size = new System.Drawing.Size(87, 17);
+            this.LesserQuantizationRadioButton.TabIndex = 0;
+            this.LesserQuantizationRadioButton.TabStop = true;
+            this.LesserQuantizationRadioButton.Text = "По нижнему";
+            this.LesserQuantizationRadioButton.UseVisualStyleBackColor = true;
+            this.LesserQuantizationRadioButton.CheckedChanged += new System.EventHandler(this.QuantizationLevelRadioButton_CheckedChanged);
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(98, 6);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(91, 17);
+            this.radioButton1.TabIndex = 1;
+            this.radioButton1.Text = "По среднему";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.QuantizationLevelRadioButton_CheckedChanged);
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(196, 6);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(90, 17);
+            this.radioButton2.TabIndex = 2;
+            this.radioButton2.Text = "По верхнему";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.QuantizationLevelRadioButton_CheckedChanged);
+            // 
+            // CoefficientTextBox
+            // 
+            this.CoefficientTextBox.Location = new System.Drawing.Point(316, 16);
+            this.CoefficientTextBox.MaxLength = 1;
+            this.CoefficientTextBox.Multiline = true;
+            this.CoefficientTextBox.Name = "CoefficientTextBox";
+            this.CoefficientTextBox.Size = new System.Drawing.Size(55, 26);
+            this.CoefficientTextBox.TabIndex = 8;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(377, 29);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(107, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Коэффициент (1...5)";
+            // 
             // Graph_Converter_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(817, 381);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.CoefficientTextBox);
+            this.Controls.Add(this.PanelOfQuantizationLevels);
             this.Controls.Add(this.panelOfRadioButtons);
             this.Controls.Add(this.QuantingLevelTextBox);
             this.Controls.Add(this.QauntingLevelButton);
-            this.Controls.Add(this.SamplingButton);
-            this.Controls.Add(this.SamplingTextBox);
             this.Controls.Add(this.ShowButton);
             this.Controls.Add(this.DrawBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -168,6 +219,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.DrawBox)).EndInit();
             this.panelOfRadioButtons.ResumeLayout(false);
             this.panelOfRadioButtons.PerformLayout();
+            this.PanelOfQuantizationLevels.ResumeLayout(false);
+            this.PanelOfQuantizationLevels.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,14 +230,18 @@
 
         private System.Windows.Forms.PictureBox DrawBox;
         private System.Windows.Forms.Button ShowButton;
-        private System.Windows.Forms.TextBox SamplingTextBox;
-        private System.Windows.Forms.Button SamplingButton;
         private System.Windows.Forms.Button QauntingLevelButton;
         private System.Windows.Forms.TextBox QuantingLevelTextBox;
         private System.Windows.Forms.Panel panelOfRadioButtons;
         private System.Windows.Forms.RadioButton squareRootRadioButton;
         private System.Windows.Forms.RadioButton cosinusoidRadioButton;
         private System.Windows.Forms.RadioButton sinusoidRadioButton;
+        private System.Windows.Forms.Panel PanelOfQuantizationLevels;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton LesserQuantizationRadioButton;
+        private System.Windows.Forms.TextBox CoefficientTextBox;
+        private System.Windows.Forms.Label label1;
     }
 }
 

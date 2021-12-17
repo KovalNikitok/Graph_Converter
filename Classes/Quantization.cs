@@ -20,7 +20,7 @@ namespace Graph_Converter.Classes
             height = startPoint.Y;
             startX = startPoint.X;
             // Если пользователь задаёт количество уровней квантования 1 или меньше, то берём стандартное значение (2)
-            this.quantizationLevels = quantizationLevels;//quantizationLevels <= 1 ? 2 : quantizationLevels;
+            this.quantizationLevels = quantizationLevels;
         }
 
         public int QuantizationThresold

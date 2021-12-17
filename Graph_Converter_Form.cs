@@ -17,27 +17,39 @@ namespace Graph_Converter
         private float samplingLevel = 0.2f;
         private int quantizationLevels = 4;
         private Functions func = new Sinusoid();
+        private string levelsOfQuantization;
 
         private void ShowButton_Click(object sender, EventArgs e)
         {
-            Graphics graphicsPaint = DrawBox.CreateGraphics();
+            Graphics graphicsPaint = DrawBox.CreateGraphics(); // графический контекст для рисования
             graphicsPaint.Clear(Color.White);
             Pen black = new Pen(Color.Black),
-                functionPen = new Pen(Color.BlueViolet, 2f);
-            startPoint.Y = DrawBox.Height - 40;
+                functionPen = new Pen(Color.BlueViolet, 2f); // Pen'ы для рисования (чёрный - оси, синий - графики
+            startPoint.Y = DrawBox.Height - 40; // высота окна для рисования
             // Рисуем оси координат
             graphicsPaint.DrawLine(black, new Point(startPoint.X, 0), new Point(startPoint.X, startPoint.Y));
             graphicsPaint.DrawLine(black, new Point(startPoint.X, startPoint.Y), new Point(DrawBox.Width, startPoint.Y));
 
+            int coeff; // коэффициент для функций
             if (startPoint.X <= DrawBox.Width)
             {
-                if (quantizationLevels <= 1)
-                    quantizationLevels = 2;
+                /*
                 if (samplingLevel < 0.01f || samplingLevel > 0.99f)
                     samplingLevel = 0.1f;
-
+                */
+                if ((!int.TryParse(
+                    CoefficientTextBox.Text.Replace('.', ','),
+                    out coeff) || coeff < 1 || coeff > 5)
+                )
+                    MessageBox.Show(
+                            this,
+                            "Неправильно задан коэффициент",
+                            "Уведомление",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
                 // Получаем точки графика функции
-                Point[] funcPoints = func.GetGraphPoints(DrawBox.Width);
+                Point[] funcPoints = func.GetGraphPoints(DrawBox.Width, startPoint, coeff > 5 ? 3 : coeff < 1 ? 1 : coeff);
                 // Рисуем уровни квантования
                 Quantization funcQuantization = new Quantization(startPoint, quantizationLevels);
                 List<int> quantizationOfFunction = funcQuantization.GetQuantizationOfFunction();
@@ -47,6 +59,7 @@ namespace Graph_Converter
                 Sampling funcSampling = new Sampling(DrawBox.Width, samplingLevel, quantizationLevels);
                 try
                 {
+                    // TODO:
                     int[] samplingDecompose = funcSampling.SamplingDecompose(startPoint, funcPoints, quantizationOfFunction);
                 }
                 catch
@@ -62,9 +75,10 @@ namespace Graph_Converter
                 
                 try
                 {
-                    QuantizationByLevels closestFromBelow = 
-                        new QuantizationByClosestFromBelowLevel(funcPoints, funcQuantization, funcSampling);
-                    closestFromBelow.DrawQuantizationOfFunction(graphicsPaint);
+                    // получаем тип квантования по селектору и отрисовываем квантование функций
+                    QuantizationByLevels quantizationByLevels =
+                      Selectors.SelectionQuantization(levelsOfQuantization, funcPoints, funcQuantization, funcSampling);
+                    quantizationByLevels.DrawQuantizationOfFunction(graphicsPaint);
                 }
                 catch
                 {
@@ -81,27 +95,13 @@ namespace Graph_Converter
             }
         }
 
-        private void SamplingButton_Click(object sender, EventArgs e)
-        {
-            if (!float.TryParse(
-                    SamplingTextBox.Text.Replace('.', ','),
-                    out this.samplingLevel)
-                )
-                MessageBox.Show(
-                        this,
-                        "Неправильный формат уровней дискретизации",
-                        "Уведомление",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information
-                    );
-        }
-
         private void QuantingLevelButton_Click(object sender, EventArgs e)
         {
             if (!int.TryParse(
                         QuantingLevelTextBox.Text,
                         out this.quantizationLevels)
                 )
+            {
                 MessageBox.Show(
                          this,
                          "Неправильный формат уровней квантования",
@@ -109,6 +109,11 @@ namespace Graph_Converter
                          MessageBoxButtons.OK,
                          MessageBoxIcon.Information
                      );
+            }
+            if (quantizationLevels > 15)
+                quantizationLevels = 15;
+            if (quantizationLevels < 3)
+                quantizationLevels = 3;
         }
 
         private void radioButton_CheckedChanged(object sender, EventArgs e)
@@ -116,25 +121,14 @@ namespace Graph_Converter
             RadioButton functionRadioButton = (RadioButton)sender;
             if (functionRadioButton.Checked)
             {
-                switch (functionRadioButton.Text)
-                {
-                    case "Синусоида":
-                    {
-                            func = new Sinusoid();
-                            break;
-                    }
-                    case "Косинусоида":
-                    {
-                            func = new Cosinusoid();
-                            break;
-                    }
-                    case "Коренная":
-                    {
-                            func = new SquareRoot();
-                            break;
-                    }
-                }
+                func = Selectors.GraphOfFunctionRadioSelector(functionRadioButton.Text);
             }
+        }
+
+        private void QuantizationLevelRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton quantizationLevelRadioButton = (RadioButton)sender;
+            levelsOfQuantization = Selectors.QuantizationLevelRadioSelector(quantizationLevelRadioButton.Text);
         }
     }
 }

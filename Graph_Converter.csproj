@@ -50,6 +50,7 @@
     <Compile Include="Classes\Quantization.cs" />
     <Compile Include="Classes\QuantizationByLevels.cs" />
     <Compile Include="Classes\Sampling.cs" />
+    <Compile Include="Classes\Selectors.cs" />
     <Compile Include="Graph_Converter_Form.cs">
       <SubType>Form</SubType>
     </Compile>
